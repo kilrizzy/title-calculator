@@ -1,19 +1,19 @@
 {
-    "name": "kilrizzy/bootforms-php",
+    "name": "kilrizzy/title-calculator",
     "type": "library",
-    "description": "Framework Independant Bootstrap 3 Form Generator",
-    "keywords": [ "bootstrap", "form", "generator", "html" ],
-    "homepage": "https://github.com/kilrizzy/bootforms-php",
+    "description": "PHP Title Calculator and Helper Functions",
+    "keywords": [ "calculator","mortgage","title","html","generator" ],
+    "homepage": "https://github.com/kilrizzy/title-calculator",
     "license": "MIT",
     "authors": [
         { "name": "kilrizzy", "email": "jeffkilroy@gmail.com" }
     ],
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.2.0"
     },
     "autoload": {
         "psr-0": {
-            "kilrizzy\\BootformsPHP": "src/"
+            "kilrizzy\\TitleCalculator": "src/"
         }
     },
     "archive": {
