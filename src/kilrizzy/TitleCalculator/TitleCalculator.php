@@ -11,14 +11,21 @@ class TitleCalculator{
     	include('settings.php');
     	$this->states = $settings->states;
     	//Setup default values
+    	$this->state = false;
+    	$this->type = false;
+    	$this->rates = false;
+    	$this->endorsements = false;
         $this->values = new \StdClass();
-        $this->values->titleCost = 0;
-        $this->values->state = '';
-        $this->values->type = '';
+        $this->values->totalCost = 0;
+        $this->values->state = 'NJ';
+        $this->values->type = 'purchase';
         $this->values->purchasePrice = 0;
         $this->values->loanAmount = 0;
         $this->values->priorLoanAmount = 0;
-        $this->values->rateTotal = 0; //
+        $this->values->rateTotal = 0;
+        $this->values->endorsementsTotal = 0;
+        $this->values->endorsementsSet = array();
+        $this->updateProperties();
     }
     public function updateProperties(){
     	//Update state / type
@@ -46,7 +53,77 @@ class TitleCalculator{
 		}
 		$this->values->rateTotal = $this->getRateCost($money);
 		//$this->values->rateTotal2 = $this->getRateCost($this->values->loanAmount);
-    	//calculate values
+    	//calculate endorsements
+    	$this->getEndorsements();
+    	//calculate total
+    	$this->values->totalCost = $this->values->rateTotal+$this->values->endorsementsTotal;
+    }
+    public function setEndorsement($setName,$setValue=true){
+    	//update properties
+    	$this->updateProperties();
+    	//
+    	$setEndorsement = new \StdClass();
+    	$setEndorsement->name = $setName;
+    	$setEndorsement->value = $setValue;
+    	//See if able to be set
+    	$checkEndorsement = $this->getEndorsementByName($setName);
+    	if($checkEndorsement){
+    		//see if allowed to edit
+    		if($checkEndorsement->editable){
+    			//check if endorsement exists
+    			$endorsementSetFound = false;
+	    		foreach($this->values->endorsementsSet as $endorsementSetKey => $endorsementSet){
+	    			if($endorsementSet->name == $setName){
+	    				$endorsementSetFound = $endorsementSetKey;
+	    			}
+	    		}
+    			if($endorsementSetFound){
+    				//update the existing item
+    				$this->values->endorsementsSet[$endorsementSetKey] = $setEndorsement;
+    			}else{
+    				$this->values->endorsementsSet[] = $setEndorsement;
+    			}
+    		}
+    	}
+    }
+    public function getEndorsementByName($name){
+    	$endorsementFound = false;
+    	foreach($this->endorsements as $endorsement){
+    		if($endorsement->name == $name){
+    			$endorsementFound = $endorsement;
+    		}
+    	}
+    	return $endorsementFound;
+    }
+    public function getEndorsementSetByName($name){
+    	$endorsementFound = false;
+    	foreach($this->values->endorsementsSet as $endorsement){
+    		if($endorsement->name == $name){
+    			$endorsementFound = $endorsement;
+    		}
+    	}
+    	return $endorsementFound;
+    }
+    public function getEndorsements(){
+    	$endorsementsTotal = 0;
+    	$endorsementsItems = array();
+    	foreach($this->endorsements as $endorsement){
+    		$endorsementAdd = $endorsement->default;
+    		//see if this should be added to list
+    		if($endorsement->editable){
+    			//see if updated
+    			$checkEndorsementSet = $this->getEndorsementSetByName($endorsement->name);
+    			if($checkEndorsementSet){
+    				$endorsementAdd = $checkEndorsementSet->value;
+    			}
+    		}
+    		if($endorsementAdd){
+    			$endorsementsTotal += $endorsement->cost;
+    			$endorsementsItems[] = $endorsement;
+    		}
+    	}
+    	$this->values->endorsementsTotal = $endorsementsTotal;
+    	$this->values->endorsementsItems = $endorsementsItems;
     }
     public function getRateCost($money){
     	$rateTotal = 0;
