@@ -11,7 +11,7 @@ NJ
 $settings->states['NJ'] = new PropertyState("NJ","New Jersey");
 //PURCHASE
 //rates
-$settings->states['NJ']->types['purchase'] = new PropertyType("Purchase");
+$settings->states['NJ']->types['purchase'] = new PropertyType('purchase',"Purchase");
 $settings->states['NJ']->types['purchase']->rates[] = new TypeRate(0,100000,5.25,1000);
 $settings->states['NJ']->types['purchase']->rates[] = new TypeRate(100001,500000,4.25,1000);
 $settings->states['NJ']->types['purchase']->rates[] = new TypeRate(500001,2000000,2.75,1000);
@@ -40,7 +40,7 @@ $settings->states['NJ']->types['purchase']->endorsements[] = new TypeEndorsement
 $settings->states['NJ']->types['purchase']->endorsements[] = new TypeEndorsement("Secondary Rate Endorsement",25);
 //REFINANCE
 //rates
-$settings->states['NJ']->types['refinance'] = new PropertyType("Refinance");
+$settings->states['NJ']->types['refinance'] = new PropertyType('refinance',"Refinance");
 $settings->states['NJ']->types['refinance']->rates[] = new TypeRate(0,100000,2.75,1000);
 $settings->states['NJ']->types['refinance']->rates[] = new TypeRate(100001,500000,2.5,1000);
 $settings->states['NJ']->types['refinance']->rates[] = new TypeRate(500001,2000000,2.25,1000);
@@ -73,7 +73,7 @@ PA
 $settings->states['PA'] = new PropertyState("PA","Pennsylvania");
 //PURCHASE
 //rates
-$settings->states['PA']->types['purchase'] = new PropertyType("Purchase");
+$settings->states['PA']->types['purchase'] = new PropertyType('purchase',"Purchase");
 $settings->states['PA']->types['purchase']->rates[] = new TypeRate(0,30000,500,0);
 $settings->states['PA']->types['purchase']->rates[] = new TypeRate(30001,45000,6.50,1000);
 $settings->states['PA']->types['purchase']->rates[] = new TypeRate(45001,100000,5.50,1000);
@@ -91,7 +91,7 @@ $settings->states['PA']->types['purchase']->endorsements[] = new TypeEndorsement
 
 //REFINANCE
 //rates
-$settings->states['PA']->types['refinance'] = new PropertyType("Refinance");
+$settings->states['PA']->types['refinance'] = new PropertyType('refinance',"Refinance");
 $settings->states['PA']->types['refinance']->rates[] = new TypeRate(0,30000,450,0);
 $settings->states['PA']->types['refinance']->rates[] = new TypeRate(30001,45000,5.25,1000);
 $settings->states['PA']->types['refinance']->rates[] = new TypeRate(45001,100000,4.75,1000);

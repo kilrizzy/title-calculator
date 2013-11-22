@@ -8,6 +8,7 @@ PHP Title Calculator and Helper Functions
 Coming Soon
 
 #TTD
+- Process endorsements
 
 - Example files
 

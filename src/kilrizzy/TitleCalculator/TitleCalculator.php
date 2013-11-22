@@ -3,11 +3,13 @@ namespace kilrizzy\TitleCalculator;
 
 class TitleCalculator{
 
+	public $debug;
 	public $states;
 	public $values;
    
     public function __construct(){
     	//Import settings
+    	$this->debug = false;
     	include('settings.php');
     	$this->states = $settings->states;
     	//Setup default values
@@ -106,7 +108,7 @@ class TitleCalculator{
     }
     public function getEndorsements(){
     	$endorsementsTotal = 0;
-    	$endorsementsItems = array();
+    	$endorsementItems = array();
     	foreach($this->endorsements as $endorsement){
     		$endorsementAdd = $endorsement->default;
     		//see if this should be added to list
@@ -119,11 +121,11 @@ class TitleCalculator{
     		}
     		if($endorsementAdd){
     			$endorsementsTotal += $endorsement->cost;
-    			$endorsementsItems[] = $endorsement;
+    			$endorsementItems[] = $endorsement;
     		}
     	}
     	$this->values->endorsementsTotal = $endorsementsTotal;
-    	$this->values->endorsementsItems = $endorsementsItems;
+    	$this->values->endorsementItems = $endorsementItems;
     }
     public function getRateCost($money){
     	$rateTotal = 0;
@@ -156,8 +158,7 @@ class TitleCalculator{
     	return $rateTotal;
     }
     public function debug($message){
-    	$debug = true;
-    	if($debug){
+    	if($this->debug){
     		echo "<br/>".$message."<br/>";
     	}
     }
@@ -179,11 +180,13 @@ class PropertyState {
 class PropertyType {
     
     public $name;
+    public $key;
     public $rates = array();
     public $endorsements = array();
 
-    function __construct($name) {
+    function __construct($key,$name) {
     	$this->name = $name;
+    	$this->key = $key;
     }
 
 } 
