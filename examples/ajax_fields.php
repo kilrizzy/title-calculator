@@ -75,6 +75,8 @@ if(isset($_POST['action']) && $_POST['action'] == 'details'){
 	        $output[] = '</div>'; 
     	}
     	//endorsements
+    	$output[] = '<div class="form-group">'; 
+		$output[] = '<label for="endorsements">Endorsements</label>'; 
     	foreach($calculator->type->endorsements as $endorsement){
     		//see if editable
     		if($endorsement->editable){
@@ -82,14 +84,15 @@ if(isset($_POST['action']) && $_POST['action'] == 'details'){
     			if($endorsement->default){
     				$checkedhtml = 'checked';
     			}
-    			$output[] = '<div class="checkbox">'; 
-				  $output[] = '<label>'; 
-				    $output[] = '<input type="checkbox" name="endorsements[]" value="'.$endorsement->name.'" '.$checkedhtml.'>'; 
-				    $output[] = $endorsement->name; 
-				  $output[] = '</label>'; 
+	    		$output[] = '<div class="checkbox">'; 
+					$output[] = '<label>'; 
+						$output[] = '<input type="checkbox" name="endorsements[]" value="'.$endorsement->name.'" '.$checkedhtml.'>'; 
+					    $output[] = $endorsement->name; 
+					$output[] = '</label>'; 
 				$output[] = '</div>'; 
     		}
     	}
+    	$output[] = '</div>';
     	//submit
     	$output[] = '<button type="submit" class="btn btn-primary">Calculate</button>';
 		$output = implode("\n",$output);

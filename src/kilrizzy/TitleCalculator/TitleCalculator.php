@@ -1,6 +1,10 @@
 <?php
 namespace kilrizzy\TitleCalculator;
-
+/**
+ * Helper functions for calculating Title Insurance
+ *
+ * 2013 Jeff Kilroy - VisionLine Media
+ */ 
 class TitleCalculator{
 
 	public $debug;
@@ -37,6 +41,7 @@ class TitleCalculator{
     	$this->endorsements = $this->type->endorsements;
     }
     public function calculate(){
+    	$this->debug("Start Calculation for ".$this->values->state." ".$this->values->type);
     	//update properties
     	$this->updateProperties();
     	//calculate rates
@@ -58,6 +63,7 @@ class TitleCalculator{
     	//calculate endorsements
     	$this->getEndorsements();
     	//calculate total
+    	$this->debug("Calculate Total Value: Rate (".$this->values->rateTotal.") + Endorsements (".$this->values->endorsementsTotal.")");
     	$this->values->totalCost = $this->values->rateTotal+$this->values->endorsementsTotal;
     }
     public function setEndorsement($setName,$setValue=true){
@@ -127,15 +133,39 @@ class TitleCalculator{
     	$this->values->endorsementsTotal = $endorsementsTotal;
     	$this->values->endorsementItems = $endorsementItems;
     }
+    /**
+	 * Add Endorsements to calculation, ignored endorsements will be excluded
+	 *
+	 * @param  array    $endorsements  Array of endorsement names to include in the calculation
+	 * @return NULL
+	*/ 
+    public function useEndorsements($endorsements){
+    	//loop all optional endorsements
+    	foreach($this->endorsements as $endorsement){
+    		if($endorsement->editable){
+    			//If not checked in the array, remove it
+    			if(!in_array($endorsement->name,$endorsements)){
+    				$this->setEndorsement($endorsement->name,false);
+    			}else{
+    				$this->setEndorsement($endorsement->name,true);
+    			}
+    		}
+    	}
+    }
+    /**
+	 * Base calculation for determining insurance cost
+	 *
+	 * @param  integer    $money  Loan amount to used to calculate rate against
+	 * @return integer
+	*/ 
     public function getRateCost($money){
+    	$this->debug("Determine Rates using $".$money);
     	$rateTotal = 0;
-    	//NJ REFI NOT CORRECT BUT OTHERS WORK???
-    	//$remaining = $money;
+    	//ERROR - NJ REFI NOT CORRECT BUT OTHERS WORK???
     	//loop through rates to determine cost
     	foreach($this->rates as $rate){
 			if($rate->max < $money){
 				$this->debug("START - $".$rateTotal." | Rate: ".$rate->min." - ".$rate->max." / PER: ".$rate->per);
-				//$remaining = $remaining - $rate->max;
 				if($rate->per > 0){
 					$multiplier = ($rate->max-$rate->min)/$rate->per;
 					$rateTotal += $multiplier * $rate->cost;
@@ -154,16 +184,23 @@ class TitleCalculator{
 				$this->debug("FinalSTART - $".$rateTotal." | Rate: ".$rate->min." - ".$rate->max." / PER: ".$rate->per);
 			}
 		}
-    	//print_r($rates);
     	return $rateTotal;
     }
+    /**
+	 * Helper function to display debug / output info
+	 *
+	 * @param  string    $message  Output debug message
+	 * @return NULL
+	*/ 
     public function debug($message){
     	if($this->debug){
-    		echo "<br/>".$message."<br/>";
+    		echo $message."<br/>";
     	}
     }
 }
-//
+/**
+	* Additional Classes used
+*/ 
 class PropertyState {
     
     public $name;

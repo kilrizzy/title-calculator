@@ -2,11 +2,16 @@
 require('../src/kilrizzy/TitleCalculator/TitleCalculator.php');
 use \kilrizzy\TitleCalculator\TitleCalculator as TitleCalculator;
 $calculator = new TitleCalculator();
+//$calculator->debug = true;
 $calculator->values->state = $_POST['state'];
 $calculator->values->type = $_POST['type'];
-$calculator->values->purchasePrice = $_POST['purchasePrice'];
 $calculator->values->loanAmount = $_POST['loanAmount'];
-$calculator->values->priorLoanAmount = $_POST['priorLoanAmount'];
+if($_POST['type'] == 'purchase'){
+  $calculator->values->purchasePrice = floatval($_POST['purchasePrice']);
+}else{
+  $calculator->values->priorLoanAmount = floatval($_POST['priorLoanAmount']);
+}
+$calculator->useEndorsements($_POST['endorsements']);
 $calculator->calculate();
 ?>
 <!DOCTYPE html>
@@ -22,9 +27,13 @@ $calculator->calculate();
   <div class="container">
     <h1>Title Quote Results</h1>
     <h2>Fees For <?php echo $calculator->state->name; ?> <?php echo $calculator->type->name; ?></h2>
+    <?php if($calculator->values->type == 'purchase'){ ?>
     <h4>Purchase Amount: $<?php echo number_format($calculator->values->purchasePrice,2); ?></h4>
+    <?php } ?>
     <h4>Loan Amount: $<?php echo number_format($calculator->values->loanAmount,2); ?></h4>
+    <?php if($calculator->values->type == 'refinance'){ ?>
     <h4>Prior Loan Amount: $<?php echo number_format($calculator->values->priorLoanAmount,2); ?></h4>
+    <?php } ?>
     <h3>Title Insurance Premium Only: $<?php echo number_format($calculator->values->rateTotal,2); ?></h3>
     <table class="table table-bordered table-condensed">
       <tbody>
