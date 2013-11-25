@@ -69,7 +69,7 @@
     <h1>Title Calculator</h1>
     <div class="row">
       <div class="col-md-6">
-        <form method="post" action="results-invoice.php">
+        <form method="post" action="results-gfe.php">
           <div id="field-state-container">..loading...</div>
           <div id="field-type-container"></div>
           <div id="field-details-container"></div>
