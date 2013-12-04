@@ -92,7 +92,7 @@ $settings->states['PA']->types['purchase']->rates[] = new TypeRate(1000001,20000
 $settings->states['PA']->types['purchase']->rates[] = new TypeRate(2000001,7000000,2,1000);
 $settings->states['PA']->types['purchase']->rates[] = new TypeRate(7000001,30000000,1.5,1000);
 //endorsements
-$settings->states['PA']->types['refinance']->endorsements[] = new TypeEndorsement("Settlement Fee",75,true,false);
+$settings->states['PA']->types['purchase']->endorsements[] = new TypeEndorsement("Settlement Fee",75,true,false);
 $settings->states['PA']->types['purchase']->endorsements[] = new TypeEndorsement("Closing Services Letter",75,true,false);
 $settings->states['PA']->types['purchase']->endorsements[] = new TypeEndorsement("Notary Fee",20,true,false);
 $settings->states['PA']->types['purchase']->endorsements[] = new TypeEndorsement("Endorsements",125,true,false);

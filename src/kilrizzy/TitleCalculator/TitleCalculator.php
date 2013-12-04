@@ -257,8 +257,60 @@ class TitleCalculator{
 				$this->debug("FinalSTART - $".$rateTotal." | Rate: ".$rate->min." - ".$rate->max." / PER: ".$rate->per);
 			}
 		}
+        /*
+        NJ Refinance has an odd addition:
+        if the loan amount is greater than the previous loan amount,
+        we take the difference between the two and multiply this against the cheapest rate
+        */
+        if($this->values->state == 'NJ' && $this->values->type == 'refinance'){
+            if($this->values->loanAmount > $this->values->priorLoanAmount){
+                $priorLoanDifference = $this->values->loanAmount - $this->values->priorLoanAmount;
+                //get last rate
+                $lastRate = end($this->rates);
+                $lastRateTotal = $lastRate->cost/$lastRate->per;
+                $rateAddition = $priorLoanDifference * $lastRateTotal;
+                $rateTotal += $rateAddition;
+                $this->debug('APPLY NJ REFI RULE - '.$priorLoanDifference.' * '.$lastRateTotal.' = '.$rateAddition);
+                $this->debug('NEW RATE IS NOW $'.$rateTotal);
+            }
+        }
     	return $rateTotal;
     }
+    /**
+     * Base calculation for determining insurance cost addition if NJ Refinance
+     *
+     * @param  integer    $money  Loan amount to used to calculate rate against
+     * @return integer
+    */ 
+    /*
+    public function getRateCostDifference($){
+        $this->debug("Determine Rates using $".$money);
+        $rateTotal = 0;
+        //ERROR - NJ REFI NOT CORRECT BUT OTHERS WORK???
+        //loop through rates to determine cost
+        foreach($this->rates as $rate){
+            if($rate->max < $money){
+                $this->debug("START - $".$rateTotal." | Rate: ".$rate->min." - ".$rate->max." / PER: ".$rate->per);
+                if($rate->per > 0){
+                    $multiplier = ($rate->max-$rate->min)/$rate->per;
+                    $rateTotal += $multiplier * $rate->cost;
+                }else{
+                    $rateTotal += $rate->cost;
+                }
+                $this->debug("END - $".$rateTotal." | Rate: ".$rate->min." - ".$rate->max." / PER: ".$rate->per);
+            }else if($rate->min < $money && $money > 0){
+                $this->debug("FinalSTART - $".$rateTotal." | Rate: ".$rate->min." - ".$rate->max." / PER: ".$rate->per);
+                if($rate->per > 0){
+                    $multiplier = ($money-$rate->min)/$rate->per;
+                    $rateTotal += $multiplier * $rate->cost;
+                }else{
+                    $rateTotal += $rate->cost;
+                }
+                $this->debug("FinalSTART - $".$rateTotal." | Rate: ".$rate->min." - ".$rate->max." / PER: ".$rate->per);
+            }
+        }
+        return $rateTotal;
+    }*/
     /**
 	 * Output a value to the screen, applies formatting
 	 *
